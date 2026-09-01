@@ -1,6 +1,4 @@
 def solution(problemInput: list):
-    res = 0
-
     x, y = problemInput[0]
 
     for i in range(1, len(problemInput)):
