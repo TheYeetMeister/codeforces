@@ -6,7 +6,7 @@ def solution(arrayB):
     sumOfB = sum(arrayB)
 
     if not sumOfB > 0:
-        return -1
+        return [-1]
 
     positiveArray = deque()
     nonPosArray = []
@@ -41,7 +41,9 @@ def main():
     for _ in range(testCaseCnt):
         _, arrayB = getInput()
 
-        print(solution(arrayB))
+        ans = solution(arrayB)
+
+        print(*ans)
 
 
 if __name__ == '__main__':
