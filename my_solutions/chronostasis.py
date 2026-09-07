@@ -8,6 +8,7 @@ def solution(arrayB):
     if not sumOfB > 0:
         return [-1]
 
+    arrayB.sort()
     positiveArray = deque()
     nonPosArray = []
 
@@ -19,8 +20,8 @@ def solution(arrayB):
 
     res = [positiveArray.popleft()]
     while positiveArray or nonPosArray:
-        if nonPosArray and res[-1] + nonPosArray[0] > 0:
-            idx = bisect.bisect_left(nonPosArray, res[-1])
+        if nonPosArray and res[-1] + nonPosArray[-1] > 0:
+            idx = bisect.bisect_left(nonPosArray, -res[-1])
             value = nonPosArray.pop(idx - 1)
         else:
             value = positiveArray.popleft()
