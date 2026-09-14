@@ -1,21 +1,30 @@
 #2257D
 from collections import namedtuple
+import math
 
 bermudaRect = namedtuple("bermudaRect", ["height",  "width", "prefixSum"])
 
 def getBermudaRectangles(area):
-    res = []
-    lastWidth = 0
+    potentialRects = []
     prefixSum = 0
 
-    for i in range(1, area):
+    for i in range(1, int(math.sqrt(area)) + 1):
         if area % i == 0:
             width = i
             height = area // i
-            prefixSum += (width - lastWidth) * height
-            lastWidth = width
 
-            res.append(bermudaRect(height, width, prefixSum))
+            potentialRects.append((width, height))
+            potentialRects.append((height, width))
+
+    potentialRects.sort()
+    prefixSum = 0
+    lastWidth = 0
+    res = []
+
+    for width, height in potentialRects:
+        prefixSum += (width - lastWidth) * height
+        lastWidth = width
+        res.append(bermudaRect(height, width, prefixSum))
 
     return res
 
@@ -33,7 +42,13 @@ def calAreaInBermudaRectangle(bermudaRects, n, width, height):
             potentialCutOff = mid
             right = mid - 1
 
-    if potentialCutOff == n:
+    if potentialCutOff == 0:
+        wBound, leftPrefix = 0, 0
+    else:
+        wBound = bermudaRects[potentialCutOff - 1]. width
+        leftPrefix = bermudaRects[potentialCutOff - 1].prefixSum
+
+    if width <= wBound:
         return width * height
 
     #findEnd
@@ -43,20 +58,18 @@ def calAreaInBermudaRectangle(bermudaRects, n, width, height):
     while left <= right:
         mid = left + (right - left) // 2
 
-        if bermudaRects[mid].width < height:
+        if bermudaRects[mid].width < width:
             left = mid + 1
         else:
             potentialLimit = mid
             right = mid - 1
 
-    leftPrefix = bermudaRects[potentialCutOff].prefixSum
     rightPrefix = bermudaRects[potentialLimit].prefixSum
 
     if bermudaRects[potentialLimit].width > width:
         rightPrefix -= (bermudaRects[potentialLimit].width - width) * bermudaRects[potentialLimit].height
-
-    cutOffWidth = bermudaRects[potentialCutOff].width
-    return height * cutOffWidth + rightPrefix - leftPrefix
+        
+    return height * wBound + rightPrefix - leftPrefix
 
     
 
